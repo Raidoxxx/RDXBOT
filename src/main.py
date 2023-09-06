@@ -5,9 +5,15 @@ import discord
 from discord import app_commands
 from discord.app_commands import Choice
 
-from key import token
+if not os.path.exists("key.json"):
+    with open("key.json", 'w') as file:
+        file.write('{}')
 
-token = token.get("TOKEN")
+with open("key.json", 'r') as file:
+    key = json.load(file)
+
+token = key["TOKEN"]
+
 server_id = "1131463549961633862"
 intents = discord.Intents.default()
 
