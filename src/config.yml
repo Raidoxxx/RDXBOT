@@ -1,0 +1,9 @@
+# Database configuration
+database:
+  # Database type (json, mysql)
+  type: "json"
+  # Database host
+  host: "localhost"
+  user: "root"
+  password: ""
+  schema: "discord"

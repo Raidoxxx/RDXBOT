@@ -18,10 +18,10 @@ class DataManager:
         return self.dataProvider
 
     def load_data(self):
-        if not os.path.exists("config.json"):
+        if not os.path.exists("config.yml"):
             self.data = JsonProvider().load_data()
         else:
-            with open("config.json", 'r') as file:
+            with open("config.yml", 'r') as file:
                 config = json.load(file)
 
         match config["database"]["type"]:

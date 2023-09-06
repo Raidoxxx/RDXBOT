@@ -39,5 +39,5 @@ class JsonProvider(DataProvider, ABC):
         self.data[key] = value
 
     def save_data(self, data):
-        with open("config.json", 'w') as file:
+        with open("config.yml", 'w') as file:
             json.dump(data, file)
