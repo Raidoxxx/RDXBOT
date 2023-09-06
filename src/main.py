@@ -19,7 +19,7 @@ intents = discord.Intents.default()
 
 
 async def registerPerfil(user_id: int, so2_id: int):
-    filename = "data.json"
+    filename = "data/data.json"
 
     if os.path.exists(filename):
         with open(filename, 'r') as file:
@@ -41,7 +41,7 @@ async def registerPerfil(user_id: int, so2_id: int):
 
 
 async def getPerfil(user_id: int):
-    filename = "data.json"
+    filename = "data/data.json"
 
     with open(filename, 'r') as file:
         data = json.load(file)
@@ -70,7 +70,7 @@ class RegisterModal(discord.ui.Modal, title="Registro"):
             await interaction.response.send_message("O id deve ser um número!", ephemeral=True)
             return
 
-        with open("data.json", 'r') as file:
+        with open("data/data.json", 'r') as file:
             data = file.read()
 
         if so2_id in data:
@@ -103,8 +103,8 @@ class Client(discord.Client):
         self.role = 1148716021205704764
         self.added = False
 
-    if not os.path.exists("data.json"):
-        with open("data.json", 'w') as file:
+    if not os.path.exists("data/data.json"):
+        with open("data/data.json", 'w') as file:
             file.write('{}')
 
     async def on_ready(self):
