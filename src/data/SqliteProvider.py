@@ -1,32 +1,22 @@
 from abc import ABC
-
-import mysql.connector
+import sqlite3
 
 from src.data.DataProvider import DataProvider
 
 
-class MySqlProvider(DataProvider, ABC):
+class SqliteProvider(DataProvider, ABC):
     def __init__(self):
         super().__init__()
         self.cursor = None
         self.connection = None
 
+    def connect(self, param):
+        self.connection = sqlite3.connect(param)
+        self.cursor = self.connection.cursor()
+
     def getUser(self, id):
         self.cursor.execute(f"SELECT * FROM users WHERE id = {id}")
         return self.cursor.fetchall()
-
-    def connect(self, host, user, password, schema):
-        self.connection = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=schema
-        )
-
-        self.cursor = self.connection.cursor()
-
-    def get_data(self):
-        return self.data
 
     def get(self, key):
         self.cursor.execute(f"SELECT * FROM {key}")

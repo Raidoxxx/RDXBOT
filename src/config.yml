@@ -1,9 +1,11 @@
 # Database configuration
+server-id: "1131463549961633862"
 database:
-  # Database type (json, mysql)
+  # Database type (json, mysql, sqlite)
   type: "json"
   # Database host
   host: "localhost"
   user: "root"
   password: ""
+  # If using sqlite, the path to the database file
   schema: "discord"

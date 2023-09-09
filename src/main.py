@@ -5,6 +5,15 @@ import discord
 from discord import app_commands
 from discord.app_commands import Choice
 
+from src.user.UserManager import UserManager
+from src.views.RegistrarView import RegistrarView
+
+if not os.path.exists("config.yml"):
+    with open("config.yml", 'w') as file:
+        file.write('{}')
+with open("config.yml", 'r') as file:
+    config = json.load(file)
+
 if not os.path.exists("key.json"):
     with open("key.json", 'w') as file:
         file.write('{}')
@@ -14,86 +23,8 @@ with open("key.json", 'r') as file:
 
 token = key["TOKEN"]
 
-server_id = "1131463549961633862"
+server_id = config["server_id"]
 intents = discord.Intents.default()
-
-
-async def registerPerfil(user_id: int, so2_id: int):
-    filename = "data/data.json"
-
-    if os.path.exists(filename):
-        with open(filename, 'r') as file:
-            if os.stat(filename).st_size == 0:
-                data = []
-            else:
-                data = json.load(file)
-
-    for item in data:
-        if item[0] == user_id:
-            return False
-
-    data.append([user_id, ["SO2", so2_id]])
-
-    with open(filename, "w") as f:
-        json.dump(data, f)
-
-    return True
-
-
-async def getPerfil(user_id: int):
-    filename = "data/data.json"
-
-    with open(filename, 'r') as file:
-        data = json.load(file)
-
-    for item in data:
-        if item[0] == user_id:
-            return item[1]
-
-    return None
-
-
-class RegisterModal(discord.ui.Modal, title="Registro"):
-    id_so2 = discord.ui.TextInput(
-        style=discord.TextStyle.short,
-        label="ID do SO2",
-        required=True,
-        max_length=30,
-        placeholder="Digite seu ID do SO2"
-    )
-
-    async def on_submit(self, interaction: discord.Interaction):
-
-        so2_id = self.id_so2.value
-
-        if not so2_id.isnumeric():
-            await interaction.response.send_message("O id deve ser um número!", ephemeral=True)
-            return
-
-        with open("data/data.json", 'r') as file:
-            data = file.read()
-
-        if so2_id in data:
-            await interaction.response.send_message("Esse ID já está registrado!", ephemeral=True)
-            return
-
-        await registerPerfil(interaction.user.id, int(so2_id))
-        await interaction.user.add_roles(aclient.role)
-        await interaction.response.send_message("Registrado com sucesso!", ephemeral=True)
-
-
-class PersistentView(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
-
-    @discord.ui.button(label="Registrar", style=discord.ButtonStyle.green, custom_id="persistent_view:verify")
-    async def verify(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if type(aclient.role) is not discord.Role:
-            aclient.role = interaction.guild.get_role(aclient.role)
-        if aclient.role not in interaction.user.roles:
-            await interaction.response.send_modal(RegisterModal())
-        else:
-            await interaction.response.send_message("Você já está registrado!", ephemeral=True)
 
 
 class Client(discord.Client):
@@ -102,10 +33,7 @@ class Client(discord.Client):
         self.synced = False
         self.role = 1148716021205704764
         self.added = False
-
-    if not os.path.exists("data/data.json"):
-        with open("data/data.json", 'w') as file:
-            file.write('{}')
+        UserManager().__init__()
 
     async def on_ready(self):
         await self.wait_until_ready()
@@ -113,7 +41,7 @@ class Client(discord.Client):
             await tree.sync(guild=discord.Object(id=server_id))
             self.synced = True
         if not self.added:
-            self.add_view(PersistentView())
+            self.add_view(RegistrarView())
             self.added = True
         print(f'{self.user} has connected to Discord!')
 

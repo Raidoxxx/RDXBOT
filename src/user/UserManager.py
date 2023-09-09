@@ -34,3 +34,10 @@ class UserManager:
 
     def get_users(self):
         return self.users
+
+    def exists(self, id):
+        for user in self.users:
+            if user.get_id() == id:
+                return True
+
+        return False

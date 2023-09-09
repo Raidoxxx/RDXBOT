@@ -4,12 +4,14 @@ import os
 from src.data.DataProvider import DataProvider
 from src.data.JsonProvider import JsonProvider
 from src.data.MySqlProvider import MySqlProvider
+from src.data.SqliteProvider import SqliteProvider
 
 
 class DataManager:
     def __init__(self):
         self.dataProvider = DataProvider()
-        self.data = self.load_data()
+        self.load_data()
+        self.data = None
 
     def get_data(self):
         return self.dataProvider.get_data()
@@ -35,3 +37,6 @@ class DataManager:
                     config["database"]["password"],
                     config["database"]["schema"]
                 )
+            case "sqlite":
+                self.data = SqliteProvider()
+                self.data.connect(config["database"]["schema"])

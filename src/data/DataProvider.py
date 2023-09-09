@@ -4,10 +4,6 @@ import abc
 class DataProvider(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
-    def load_data(self):
-        pass
-
-    @abc.abstractmethod
     def getUser(self, id):
         pass
 
